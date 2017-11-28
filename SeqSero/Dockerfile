@@ -2,8 +2,7 @@ FROM debian:stretch
 
 MAINTAINER Otoniel Maya <otto94@gmail.com>
 
-RUN mkdir -p /home/bin && echo 'export PATH=/home/bin:$PATH' >> $HOME/.bashrc
-RUN source $HOME/.bashrc
+RUN mkdir -p /home/bin && echo 'export PATH=/home/bin:$PATH' >> $HOME/.bashrc && source $HOME/.bashrc
 RUN apt-get update && apt-get -y upgrade && \
     apt-get install -y git python python-pip zlib1g-dev wget libncurses5-dev libncursesw5-dev && \
     pip install biopython && \
