@@ -1,4 +1,4 @@
-from debian:stretch
+FROM debian:stretch
 
 MAINTAINER Otoniel Maya <otto94@gmail.com>
 
