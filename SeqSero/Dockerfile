@@ -2,16 +2,26 @@ FROM debian:stretch
 
 MAINTAINER Otoniel Maya <otto94@gmail.com>
 
-RUN mkdir -p /home/bin && export PATH=/home/bin:$PATH
+RUN mkdir /data
+
+RUN groupadd fuse && \
+    useradd --create-home --shell /bin/bash --user-group --uid 1000 --groups sudo,fuse ssb && \
+    echo "ssb\nssb\n" | passwd ssb && chown ssb:ssb /data
+
 RUN apt-get update && apt-get -y upgrade && \
-    apt-get install -y git python python-pip zlib1g-dev wget libncurses5-dev libncursesw5-dev && \
+    apt-get install -y --no-install-recommends build-essential git python python-pip \ 
+            zlib1g-dev wget libncurses5-dev libncursesw5-dev samtools ncbi-blast+ && \
     pip install biopython && \
-    cd /home/bin && git clone https://github.com/denglab/SeqSero.git && \
+    cd /opt && git clone https://github.com/CNRDOGM/SeqSero.git && \
     ln -s SeqSero/SeqSero.py . && \
-    cd /home/bin && \
+    cd /opt && \
     git clone https://github.com/lh3/bwa.git BWA && \
-    cd BWA && make && cd .. && ln BWA/bwa . && \
-    wget 'https://downloads.sourceforge.net/project/samtools/samtools/0.1.19/samtools-0.1.19.tar.bz2'  && \
-    tar jxvf samtools-0.1.19.tar.bz2 && rm samtools-0.1.19.tar.bz2 && \
-    cd samtools-0.1.19; make && \
-    cd .. && ln -s samtools-0.1.19/samtools . 
+    cd BWA && make && cd .. && ln BWA/bwa .
+
+ENV PATH=/opt:$PATH
+
+USER ssb
+
+VOLUME /data
+
+WORKDIR /data
