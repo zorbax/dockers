@@ -5,7 +5,7 @@ MAINTAINER Otoniel Maya <otto94@gmail.com>
 RUN mkdir /data
 
 RUN groupadd fuse && \
-    useradd --shell /bin/bash --user-group --uid 1000 --groups sudo,fuse ssb && \
+    useradd --create-home --shell /bin/bash --user-group --uid 1000 --groups sudo,fuse ssb && \
     echo "ssb\nssb\n" | passwd ssb && chown ssb:ssb /data
 
 RUN yum -y update; yum clean all && yum -y upgrade; yum clean all && \
