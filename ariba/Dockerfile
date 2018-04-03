@@ -22,8 +22,8 @@ RUN cd /opt && \
 
 ENV ARIBA_BOWTIE2=/opt/bowtie2-2.2.9/bowtie2 ARIBA_CDHIT=cdhit-est MPLBACKEND="agg"
 
-RUN cd /opt && git clone https://github.com/sanger-pathogens/ariba.git && \
-    cd ariba && python3 setup.py install
+RUN cd /opt && wget https://github.com/sanger-pathogens/ariba/archive/v2.11.1.tar.gz && \
+    tar -zxvf v2.11.1.tar.gz && cd ariba-* && python3 setup.py install
 
 USER ssb
 
