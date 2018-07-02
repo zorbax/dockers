@@ -22,8 +22,12 @@ RUN cd /opt && wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/LATEST/ncbi-bla
     wget -q https://github.com/lskatz/lyve-SET/archive/v1.1.4g.tar.gz && \
     tar -zxvf v1.1.4g.tar.gz && rm -f v1.1.4g.tar.gz && cd lyve-SET-1.1.4g && \
     make install
+    
+RUN cd /opt && wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.36.zip && \
+    unzip Trimmomatic-0.36.zip && rm Trimmomatic-0.36.zip && chmod +x Trimmomatic-0.36/trimmomatic-0.36.jar && \
+    ln -s Trimmomatic-0.36/trimmomatic-0.36.jar trimmomatic
 
-ENV PATH=/opt/lyve-SET-1.1.4g/scripts:$PATH PERL5LIB=/opt/lyve-SET-1.1.4g/lib:$PERL5LIB
+ENV PATH=/opt:/opt/lyve-SET-1.1.4g/scripts:$PATH PERL5LIB=/opt/lyve-SET-1.1.4g/lib:$PERL5LIB
 
 VOLUME /data
 
