@@ -4,10 +4,6 @@ MAINTAINER Otoniel Maya <otto94@gmail.com>
 
 RUN mkdir /data
 
-RUN groupadd fuse && \
-    useradd --create-home --shell /bin/bash --user-group --uid 1000 --groups sudo,fuse ssb && \
-    echo "ssb\nssb\n" | passwd ssb && chown ssb:ssb /data
-
 RUN yum -y update; yum clean all && yum -y upgrade; yum clean all && \
     yum -y groupinstall "Development Tools" ; yum clean all
 
@@ -23,7 +19,7 @@ RUN cd /opt && wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/LATEST/ncbi-bla
     tar -zxvf v2.0.1.tar.gz && rm -f v2.0.1.tar.gz && cd cd lyve-SET-2.0.1 && \
     make install
 
-ENV PATH=/opt/cd lyve-SET-2.0.1/scripts:$PATH PERL5LIB=/opt/cd lyve-SET-2.0.1/lib:$PERL5LIB
+ENV PATH=/opt/lyve-SET-2.0.1/scripts:$PATH PERL5LIB=/opt/lyve-SET-2.0.1/lib:$PERL5LIB
 
 VOLUME /data
 
