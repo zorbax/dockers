@@ -1,0 +1,4 @@
+{
+    "data-root": "/home/zorbax/bin/Docker",
+    "storage-driver": "overlay2"
+}
