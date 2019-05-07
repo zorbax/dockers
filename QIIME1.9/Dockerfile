@@ -7,20 +7,16 @@ ARG DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -yq --no-install-recommends \
     git wget sudo build-essential python-dev ca-certificates \
-    r-base bzip2 unzip locales && apt-get clean
+    bzip2 unzip locales fontconfig libmpc-dev libncurses5-dev \
+    libssl-dev libzmq-dev libgsl0-dev openjdk-6-jdk libxml2 \
+    libxslt1.1 libxslt1-dev ant zlib1g-dev libpng12-dev \
+    libfreetype6-dev mpich2 libreadline-dev gfortran \
+    libmysqlclient16 libmysqlclient-dev ghc sqlite3 \
+    libsqlite3-dev libbz2-dev tcl-dev tk-dev r-base \
+    r-base-dev libatlas-dev libatlas-base-dev \
+    liblapack-dev swig libhdf5-serial-dev && apt-get clean
 
-RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen
-
-RUN wget https://git.io/fjOOL -O dependencies.R && \
-    Rscript dependencies.R && rm dependencies.R
-
-#RUN wget --quiet 
-#https://github.com/krallin/tini/releases/download/v0.18.0/tini && 
-#\
-#    mv tini /usr/local/bin/tini && chmod +x /usr/local/bin/tini
-
-ENV CONDA_DIR /opt/conda
-ENV PATH $CONDA_DIR/bin:$PATH
+ENV PATH /opt/miniconda/bin:$PATH /opt
 ENV SHELL /bin/bash
 ENV NB_USER atg
 ENV NB_UID 1000
@@ -28,25 +24,27 @@ ENV LC_ALL en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US.UTF-8
 
+RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && locale-gen
+
 RUN useradd -m -s /bin/bash -N -u $NB_UID $NB_USER && \
-    mkdir -p /opt/conda && chown atg /opt/conda
+    mkdir -p /opt/miniconda /home/$NB_USER/{work,.local} && \
+    chown atg /opt/miniconda
 
 USER atg
 
-mkdir -p /home/$NB_USER/{work,.local}
-
-RUN cd /tmp && mkdir -p $CONDA_DIR && \
+RUN cd /tmp && \
     wget --quiet https://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh && \
-    /bin/bash Miniconda-latest-Linux-x86_64.sh -f -b -p $CONDA_DIR && \
+    /bin/bash Miniconda-latest-Linux-x86_64.sh -f -b -p /opt/miniconda && \
     rm Miniconda-latest-Linux-x86_64.sh && \
-    $CONDA_DIR/bin/conda install --yes conda
+    /opt/miniconda/bin/conda install --yes conda
 
-RUN conda install --yes --quiet \
+RUN conda install -y -q \
     numpy matplotlib=1.4.3 pandas scipy ant && \
-    conda install -c bioconda java-jdk && \
-    conda install -c r r-base && conda clean -yt
+    conda install -y -c bioconda java-jdk &&
+    conda install -y -c anaconda openjdk && \
+    conda install -y -c r r-base && conda clean -yt
 
-RUN pip install --upgrade pip && pip install qiime
+RUN conda install -y -c bioconda qiime
 
 RUN mkdir -p $HOME/.config/matplotlib && \
     echo "backend: agg" > /home/$NB_USER/.config/matplotlib/matplotlibrc \
@@ -54,15 +52,18 @@ RUN mkdir -p $HOME/.config/matplotlib && \
 
 WORKDIR /home/$NB_USER/work
 
-# Use qiime-deploy to install all other dependencies
-RUN cd && git clone https://github.com/qiime/qiime-deploy.git && \
-    git clone https://github.com/qiime/qiime-deploy-conf.git
+USER root
 
-RUN cd ~/qiime-deploy && python qiime-deploy.py /opt/qiime_deps/ -f \
-~/qiime-deploy-conf/qiime-1.9.1/qiime.conf \
---force-remove-failed-dirs
+RUN cd /opt && git clone https://github.com/CNRDOGM/qiime-deploy.git && \
+    git clone https://github.com/CNRDOGM/qiime-deploy-conf.git
 
-# create and set user for container
+RUN mkdir qiime && python qiime-deploy/qiime-deploy.py /opt/qiime \
+      -f /opt/qiime-deploy-conf/qiime-1.9.1/qiime.conf \
+      --force-remove-failed-dirs && rm -rf /opt/{qiime-deploy,qiime-deploy-conf}
+
+RUN source $QIIME_HOME/qiime_software/$QIIME_VERSION
+RUN source $QIIME_PREFIX/activate.sh
+
 cd /opt
 wget https://s3.us-east-2.amazonaws.com/datos16s/usearch61.tar.gz
 tar -zxvf usearch61.tar.gz && rm -f usearch61.tar.gz
@@ -71,3 +72,4 @@ then
    chmod +x usearch61
 fi
 
+PATH /opt
