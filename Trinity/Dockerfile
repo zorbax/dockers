@@ -1,5 +1,4 @@
 FROM ubuntu:18.04
-MAINTAINER bhaas@broadinstitute.org
 
 RUN apt-get update && apt-get install -y gcc g++ perl python automake make \
                                        wget git curl libdb-dev \
@@ -20,15 +19,8 @@ RUN cpanm install DB_File
 
 RUN cpanm install URI::Escape
 
-
-## set up tool config and deployment area:
-
 ENV SRC /usr/local/src
 ENV BIN /usr/local/bin
-
-
-#####
-# Install R
 
 WORKDIR $SRC
 
@@ -59,14 +51,11 @@ RUN Rscript -e 'source("http://bioconductor.org/biocLite.R");library(BiocInstall
 RUN Rscript -e 'source("http://bioconductor.org/biocLite.R");library(BiocInstaller); biocLite("tximport", dep = TRUE)'
 RUN Rscript -e 'source("http://bioconductor.org/biocLite.R");library(BiocInstaller); biocLite("tximportData", dep = TRUE)'
 
-
-
-## bowtie
+#Bowtie
 WORKDIR $SRC
 RUN wget https://sourceforge.net/projects/bowtie-bio/files/bowtie/1.2.1.1/bowtie-1.2.1.1-linux-x86_64.zip/download -O bowtie-1.2.1.1-linux-x86_64.zip && \
         unzip bowtie-1.2.1.1-linux-x86_64.zip && \
 	mv bowtie-1.2.1.1/bowtie* $BIN
-
 
 ## RSEM
 RUN mkdir /usr/local/lib/site_perl
@@ -79,13 +68,11 @@ RUN wget https://github.com/deweylab/RSEM/archive/v1.3.0.tar.gz && \
     cp rsem_perl_utils.pm /usr/local/lib/site_perl/ && \
     cd ../ && rm -r RSEM-1.3.0
 
-
 ## Kallisto
 WORKDIR $SRC
 RUN wget https://github.com/pachterlab/kallisto/releases/download/v0.43.1/kallisto_linux-v0.43.1.tar.gz && \
     tar xvf kallisto_linux-v0.43.1.tar.gz && \
     mv kallisto_linux-v0.43.1/kallisto $BIN
-
 
 ## FASTQC
 WORKDIR $SRC
@@ -94,8 +81,7 @@ RUN wget http://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.11.5
     chmod 755 /usr/local/src/FastQC/fastqc && \
     ln -s /usr/local/src/FastQC/fastqc $BIN/.
 
-
-# blast
+# BLAST
 WORKDIR $SRC
 RUN wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.5.0/ncbi-blast-2.5.0+-x64-linux.tar.gz && \
     tar xvf ncbi-blast-2.5.0+-x64-linux.tar.gz && \
@@ -110,8 +96,6 @@ RUN wget https://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.3.4.1/bowti
     mv bowtie2-2.3.4.1-linux-x86_64/bowtie2* $BIN && \
     rm *.zip && \
     rm -r bowtie2-2.3.4.1-linux-x86_64
-
-
 
 ## Samtools
 RUN wget https://github.com/samtools/samtools/releases/download/1.7/samtools-1.7.tar.bz2 && \
@@ -132,16 +116,12 @@ RUN wget https://github.com/COMBINE-lab/salmon/releases/download/v0.9.1/Salmon-0
     tar xvf Salmon-0.9.1_linux_x86_64.tar.gz && \
     ln -s $SRC/Salmon-latest_linux_x86_64/bin/salmon $BIN/.
     
-
-
 ENV LD_LIBRARY_PATH=/usr/local/lib
 
 RUN pip install numpy
 
-
 RUN Rscript -e 'source("http://bioconductor.org/biocLite.R");library(BiocInstaller); biocLite("fastcluster", dep = TRUE)'
 
-## patch the RSEM install... need convert-sam-for-rsem  too!
 WORKDIR $SRC
 RUN wget https://github.com/deweylab/RSEM/archive/v1.3.0.tar.gz && \
 	 tar xvf v1.3.0.tar.gz && \
@@ -152,22 +132,13 @@ RUN wget https://github.com/deweylab/RSEM/archive/v1.3.0.tar.gz && \
      cp rsem_perl_utils.pm /usr/local/lib/site_perl/ && \
      cd ../ && rm -r RSEM-1.3.0
 
-# adding multiqc
 RUN pip install git+https://github.com/ewels/MultiQC.git
 
-
-
-
-##########
 ## Trinity
 
-
 WORKDIR $SRC
-
 RUN apt-get update && apt-get install -y cmake
-
 RUN apt-get install -y rsync
-
 ENV TRINITY_VERSION="2.8.5"
 ENV TRINITY_CO="d35f3c1149bab077ca7c83f209627784469c41c6"
 
@@ -182,7 +153,7 @@ RUN git clone https://github.com/trinityrnaseq/trinityrnaseq.git && \
 
 ENV TRINITY_HOME /usr/local/bin/trinityrnaseq
 
-ENV PATH=${TRINITY_HOME}:${PATH}
+ENV PATH=${TRINITY_HOME}:${TRINITY_HOME}/util/:${PATH}
 
 COPY Dockerfile $SRC/Dockerfile.$TRINITY_VERSION
 
