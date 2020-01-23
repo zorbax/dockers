@@ -22,7 +22,7 @@ RUN mkdir -p /opt/bin && cd /opt/bin && \
 
 ENV PATH="/opt/bin/LEfSe:${PATH}"
 
-RUN pip install rpy2==2.7.0 numpy matplotlib argparse
+RUN pip install rpy2==2.8.6 numpy==1.16.6 matplotlib==2.1.2 argparse
 
 VOLUME /data
 WORKDIR /data
