@@ -30,7 +30,7 @@ RUN cd /opt/qiime-1.9.1 && \
     rm -rf /opt/qiime-1.9.1
 
 RUN mkdir -p /opt/tmp/ /work && \
-    cd /opt && wget https://s3.us-east-2.amazonaws.com/datos16s/usearch61.tar.gz \
+    cd /opt && wget https://datos16s.s3.us-east-2.amazonaws.com/usearch61.tar.gz \
     && tar -zxvf usearch61.tar.gz && rm -f usearch61.tar.gz && chmod +x usearch61
 
 VOLUME /work
