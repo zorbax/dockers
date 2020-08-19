@@ -6,6 +6,6 @@ sudo cp daemon.json /etc/docker/
 
 sudo rsync -aqxP /var/lib/docker/ /home/zorbax/bin/Docker
 
-sudo systemctl start docker
+sudo systemctl daemon-reload && sudo systemctl start docker
 
 docker info
