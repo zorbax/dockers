@@ -49,3 +49,19 @@ VOLUME /data
 WORKDIR /data
 ENV PATH /opt/miniconda3/envs/qiime1/bin:$PATH
 CMD [ "/bin/bash" ]
+
+
+    import json
+    import pandas as pd
+
+    with open('analysis.json') as f:
+        d = json.load(f)
+
+    dfs = []
+    for x, y in enumerate(d):
+        data = pd.json_normalize(d[x]['result'])
+        dfs.append(data)
+
+    df = pd.concat(dfs, ignore_index=True)
+
+    df.to_csv('analysis.csv', index=False)
