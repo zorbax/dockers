@@ -12,7 +12,7 @@ MAINTAINER Otoniel Maya <otto94@gmail.com>
 #     zlib1g-dev bzip2 libncurses5-dev pkg-config libbz2-dev libcurl4-openssl-dev && apt-get clean
 
 RUN apt-get update && apt-get install -y wget bzip2 libxext6 libsm6 libxrender1 libglib2.0-0 python2.7-dev \
-    python-pip python-dev
+    python-pip python-dev default-jdk
 
 RUN echo "deb http://cran.r-project.org/bin/linux/ubuntu xenial/" > /etc/apt/sources.list.d/cran.list && \
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9 && \
@@ -23,6 +23,7 @@ RUN cd /opt && wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-
     rm Miniconda3-latest-Linux-x86_64.sh
 
 ENV PATH /opt/miniconda3/bin:$PATH
+ENV DISPLAY :0
 RUN conda create -n qiime1 -y python=2.7
 
 SHELL ["conda", "run", "-n", "qiime1", "/bin/bash", "-c"]
@@ -44,24 +45,14 @@ RUN mkdir -p /data && \
     cd /opt && wget https://datos16s.s3.us-east-2.amazonaws.com/usearch61.tar.gz \
     && tar -zxvf usearch61.tar.gz && rm -f usearch61.tar.gz && chmod +x usearch61
 
+RUN mkdir -p /opt/temp && cd "$_" && \
+    wget -O rdp.zip "https://downloads.sourceforge.net/project/rdp-classifier/rdp-classifier/rdp_classifier_2.2.zip?r=http%3A%2F%2Fqiime.org%2Finstall%2Falternative.html&ts=1489181761&use_mirror=svwh" && \
+    unzip rdp.zip -d /opt && \
+    rm rdp.zip
+
 ENV PATH /opt:$PATH
 VOLUME /data
 WORKDIR /data
+ENV RDP_JAR_PATH="/opt/rdp_classifier_2.2/rdp_classifier-2.2.jar"
 ENV PATH /opt/miniconda3/envs/qiime1/bin:$PATH
 CMD [ "/bin/bash" ]
-
-
-    import json
-    import pandas as pd
-
-    with open('analysis.json') as f:
-        d = json.load(f)
-
-    dfs = []
-    for x, y in enumerate(d):
-        data = pd.json_normalize(d[x]['result'])
-        dfs.append(data)
-
-    df = pd.concat(dfs, ignore_index=True)
-
-    df.to_csv('analysis.csv', index=False)
