@@ -12,7 +12,7 @@ MAINTAINER Otoniel Maya <otto94@gmail.com>
 #     zlib1g-dev bzip2 libncurses5-dev pkg-config libbz2-dev libcurl4-openssl-dev && apt-get clean
 
 RUN apt-get update && apt-get install -y wget bzip2 libxext6 libsm6 libxrender1 libglib2.0-0 python2.7-dev \
-    python-pip python-dev default-jdk
+    python-pip python-dev default-jdk libfreetype6-dev 
 
 RUN echo "deb http://cran.r-project.org/bin/linux/ubuntu xenial/" > /etc/apt/sources.list.d/cran.list && \
     apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9 && \
@@ -41,6 +41,8 @@ RUN pip install numpy && \
 #    python setup.py install --prefix=$HOME/bin/qiime && \
 #    rm -rf /opt/qiime-1.9.1
 
+RUN pip install matplotlib==1.4.3 && \
+	     echo "backend: Agg" > ~/.config/matplotlib/matplotlibrc
 RUN mkdir -p /data && \
     cd /opt && wget https://datos16s.s3.us-east-2.amazonaws.com/usearch61.tar.gz \
     && tar -zxvf usearch61.tar.gz && rm -f usearch61.tar.gz && chmod +x usearch61
