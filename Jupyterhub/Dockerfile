@@ -1,5 +1,7 @@
 FROM continuumio/miniconda3:latest
 
+SHELL ["/bin/bash", "-c"]
+
 RUN apt-get update -y \
     && apt-get install -y --no-install-recommends \
     git texlive texlive-fonts-recommended unzip vim \
@@ -11,7 +13,6 @@ RUN conda update -y conda
 RUN conda install -c conda-forge \
     jupyterhub jupyterlab numpy matplotlib pandas seaborn r-essentials \
         scipy pingouin && conda clean -ay
-
 
 RUN pip3 install powerline-shell
 RUN echo '\n\
