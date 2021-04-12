@@ -1,0 +1,9 @@
+version: '3'
+services:
+  shiny:
+    build: .
+    ports:
+      - "80:3838"
+    volumes:
+      - './app:/srv/shiny-server/'
+
