@@ -15,22 +15,15 @@ RUN conda install -c conda-forge \
         scipy pingouin && conda clean -ay
 
 RUN pip3 install powerline-shell
-RUN echo '\n\
-function _update_ps1() {\n\
-    PS1=$(powerline-shell $?)\n\
-    }\n\
-if [[ $TERM != linux && ! $PROMPT_COMMAND =~ _update_ps1 ]]\n\
-then \n\
-    PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"\n\
-fi\n\
-' >>  /etc/profile
 
-COPY jupyterhub_config.py /
+COPY ./jupyterhub_config.py /
+COPY ./profile /etc/profile
+COPY ./dircolors /etc/dircolors
 
 # Create admin user
 RUN useradd -ms /bin/bash atgenomics
 
 # Setup application
-EXPOSE 8000 
+EXPOSE 8000
 
 CMD ["jupyterhub", "--ip='*'", "--port=8000", "--no-browser", "--allow-root"]
