@@ -1,14 +1,14 @@
-FROM centos:centos7
+FROM rockylinux:8.5
 
-MAINTAINER Otoniel Maya <otto94@gmail.com>
+MAINTAINER @zorbax
 
-RUN yum -y install wget unzip && \
-    cd /tmp && \
-    wget -q --no-check-certificate \
-    https://support.illumina.com/content/dam/illumina-support/documents/downloads/software/bcl2fastq/bcl2fastq2-v2-20-0-linux-x86-64.zip && \
-    unzip *.zip && \
-    yum -y --nogpgcheck localinstall /tmp/bcl2fastq2-*.rpm && \
-    yum -y remove wget unzip && \
-    rm -rf /tmp/{*.rpm,*zip}
+# download rpm file from:
+# https://emea.support.illumina.com/downloads/bcl2fastq-conversion-software-v2-20.html
+
+COPY bcl2fastq2-v2-20-0-linux-x86-64.zip /tmp
+
+RUN dnf -y install unzip && \
+    cd /tmp && unzip bcl2fastq2-v2-20-0-linux-x86-64.zip && \
+    dnf -y --nogpgcheck localinstall /tmp/bcl2fastq2-*.rpm && rm -rf /tmp/{*.rpm,*zip}
 
 
