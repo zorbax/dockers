@@ -11,4 +11,3 @@ RUN dnf -y install unzip && \
     cd /tmp && unzip bcl2fastq2-v2-20-0-linux-x86-64.zip && \
     dnf -y --nogpgcheck localinstall /tmp/bcl2fastq2-*.rpm && rm -rf /tmp/{*.rpm,*zip}
 
-
