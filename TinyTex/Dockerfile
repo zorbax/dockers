@@ -12,7 +12,7 @@ ENV PATH="/root/.TinyTeX/bin/x86_64-linux:${PATH}"
 
 RUN tlmgr install enumitem ragged2e fancyhdr xifthen ifmtarg setspace \
         fontawesome5 sourcesanspro tcolorbox pgf environ parskip roboto \
-        bookmark
+        bookmark biblatex biber
 
 RUN echo 'alias ll="ls -ltrh"' >> ~/.bashrc
 VOLUME /data
