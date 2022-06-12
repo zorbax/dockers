@@ -1,3 +1,4 @@
+*.md
 *.swp
 .idea
-*zip
+*.zip
