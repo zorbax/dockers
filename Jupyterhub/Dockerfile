@@ -16,9 +16,9 @@ RUN conda install -c conda-forge \
 
 RUN pip3 install powerline-shell
 
-COPY ./jupyterhub_config.py /
-COPY ./profile /etc/profile
-COPY ./dircolors /etc/dircolors
+COPY ./config/jupyterhub_config.py /
+COPY ./config/profile /etc/profile
+COPY ./config/dircolors /etc/dircolors
 
 # Create admin user
 RUN useradd -ms /bin/bash atgenomics

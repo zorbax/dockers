@@ -1,14 +1,14 @@
-FROM ubuntu:focal
+FROM debian:12-slim
 
-ENV CRAN=https://packagemanager.rstudio.com/all/__linux__/focal/latest
+ENV CRAN=https://packagemanager.posit.co/cran/__linux__/bookworm/latest
 ENV DEFAULT_USER=rstudio
 ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
 ENV PATH=/usr/lib/rstudio-server/bin:$PATH
-ENV RSTUDIO_VERSION=2022.07.1+554
+ENV RSTUDIO_VERSION=2023.06.1+524
 ENV R_HOME=/usr/local/lib/R
-ENV R_VERSION=4.2.1
-ENV S6_VERSION=v2.1.0.2
+ENV R_VERSION=4.3.1
+ENV S6_VERSION=v3.1.5.0
 ENV TERM=xterm
 ENV TZ=Etc/UTC
 

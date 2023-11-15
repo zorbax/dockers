@@ -2,3 +2,5 @@
 *.swp
 .idea
 *.zip
+*.sif
+jupyterhub/config/
