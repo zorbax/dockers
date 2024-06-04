@@ -1,6 +1,6 @@
-FROM rockylinux:8.5
+FROM rockylinux:9.0
 
-MAINTAINER @zorbax
+LABEL maintainer="@zorbax"
 
 # download rpm file from:
 # https://emea.support.illumina.com/downloads/bcl2fastq-conversion-software-v2-20.html

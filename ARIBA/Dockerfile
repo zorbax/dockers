@@ -1,6 +1,6 @@
-FROM debian:stretch
+FROM debian:12-slim
 
-MAINTAINER Otoniel Maya <otto94@gmail.com>
+LABEL maintainer="@zorbax"
 
 RUN mkdir /data
 
