@@ -1,6 +1,6 @@
 FROM ubuntu:16.04
 
-MAINTAINER Otoniel Maya <otto94@gmail.com>
+LABEL author Otoniel Maya <otto94@gmail.com>
 
 #ARG DEBIAN_FRONTEND=noninteractive
 
